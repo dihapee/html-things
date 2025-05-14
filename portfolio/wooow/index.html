@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Don't Touch Me!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #222;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+ 
+        button {
+            position: absolute;
+            background: none;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+ 
+        button img {
+            width: 50vh;
+            height: 80vh;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6);
+            transition: transform 0.2s ease-in-out;
+        }
+ 
+        button:hover img {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(255, 0, 0, 0.8);
+        }
+ 
+        button:active img {
+            transform: scale(0.9);
+            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.5);
+        }
+ 
+        #rageTitle {
+            position: absolute;
+            font-size: 5rem;
+            font-weight: bold;
+            color: red;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 1);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="rageTitle">RAGE MODE</h1>
+    <button id="dangerButton">
+        <img src="donttouch.jpg" alt="Button Image">
+    </button>
+ 
+    <script>
+        const messages = [
+            "HEJ, Neříkal jsem ti, abys na to neklikl?! 😡",
+            "🚫STOP🚫 🚫STOP🚫 🚫STOP🚫",
+            "NEUMIS CESKY SNAD?👹",
+            "‼️pro debily - dont touch znamena NESAHAT‼️",
+            "OK, ja taky umim par veci! 😤",
+            "🙏🙏MUZES SE SKLIDNIT UZ!🙏🙏",
+            "👊👊jeste jednou a facky budou litat!👊👊",
+            "👹BALKAN RAGE!👹",
+            "JAAAK",
+            "seru na tebe!"
+        ];
+ 
+        let clickCount = 0;
+        let moveSpeed = 1;
+        let isMoving = false;
+        let rageInterval;
+        const button = document.getElementById("dangerButton");
+        const rageTitle = document.getElementById("rageTitle");
+ 
+ 
+        button.addEventListener("click", () => {
+            if (clickCount < messages.length) {
+                alert(messages[clickCount]);
+                clickCount++;
+ 
+                if (clickCount === 5) {
+                    startMoving();
+                } else if (clickCount === 8) {
+                    startRageMode();
+                } else if (clickCount === 9) {
+                    stopRageMode();
+                } else if (clickCount === 10) {
+                    gsap.to(button, {
+                        scale: 0,
+                        duration: 1,
+                        ease: "power3.in",
+                        onComplete: () => {
+                            setTimeout(() => {
+                                window.location.href = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWI4dXBnOHBoNThzcThhaDF1bGhocmx3bjh6dmU0b255Zjhnb2wwNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NtzoaPcJXghtuJ5M71/giphy.gif";
+                            }, 500);
+                        }
+                    });
+                }
+            }
+        });
+ 
+        function startMoving() {
+            isMoving = true;
+            moveButton();
+        }
+ 
+        function moveButton() {
+            if (!isMoving) return;
+ 
+            const maxX = window.innerWidth - button.offsetWidth;
+            const maxY = window.innerHeight - button.offsetHeight;
+ 
+            let newX = Math.random() * maxX;
+            let newY = Math.random() * maxY;
+ 
+            gsap.to(button, {
+                left: newX,
+                top: newY,
+                duration: moveSpeed,
+                ease: "power1.inOut",
+                onComplete: moveButton
+            });
+            moveSpeed = Math.max(0.009, moveSpeed * 0.9);
+        }
+ 
+        function startRageMode() {
+            isMoving = true;
+            rageTitle.style.display = "block";
+            rageInterval = setInterval(() => {
+                document.body.style.backgroundColor = "red";
+                setTimeout(() => {
+                    document.body.style.backgroundColor = "#222";
+                }, 100);
+            }, 200);
+            moveSpeed = Math.max(0.009, moveSpeed * 0.0009);
+        }
+        function stopRageMode() {
+            clearInterval(rageInterval);
+            document.body.style.backgroundColor = "#222";
+            rageTitle.style.display = "none";
+            isMoving = false;
+ 
+            gsap.to(button, {
+                left: "50%",
+                top: "50%",
+                x: "-50%",
+                y: "-50%",
+                duration: 1.5,
+                ease: "power2.out"
+            });
+            moveSpeed = 2;
+        }
+    </script>
+</body>
+</html>

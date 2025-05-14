@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Křečci - Roztomilí a zábavní!</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Styl pro celou obrazovku s černým pozadím */
+        #game-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 1000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* Ikony křečka a semínka */
+        .hamster {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            transition: transform 0.1s linear; /* Plynulý pohyb */
+            pointer-events: none;
+            background: url('./hamster.png') no-repeat center/contain;
+        }
+
+        .seed, .bomb {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-size: contain;
+        }
+
+        .seed {
+            background: url('./seed.png') no-repeat center/contain;
+        }
+
+        .bomb {
+            background: url('./bomb.png') no-repeat center/contain;
+        }
+
+        /* Počítadlo semínek */
+        .score {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body class="bg-yellow-50 text-gray-800">
+
+    <!-- Nová sekce pro minihru -->
+    <section class="container mx-auto py-16 text-center">
+        <h2 class="text-4xl font-bold mb-6">Minihra: Křeček sbírá semínka</h2>
+        <button id="start-game-btn" class="bg-green-500 text-white py-3 px-8 rounded-full hover:bg-green-600 transition-all">
+            Spustit minihru
+        </button>
+    </section>
+
+    <!-- Overlay pro minihru -->
+    <div id="game-overlay">
+        <div class="score">allah akbar: <span id="seed-count">0</span></div>
+        <div id="hamster" class="hamster"></div>
+    </div>
+
+    <script>
+        const startGameBtn = document.getElementById('start-game-btn');
+        const gameOverlay = document.getElementById('game-overlay');
+        const hamster = document.getElementById('hamster');
+        let seedCount = 0;
+    
+        // Funkce pro spuštění hry
+        startGameBtn.addEventListener('click', () => {
+            gameOverlay.style.display = 'block';
+            seedCount = 0;
+            document.getElementById('seed-count').textContent = seedCount;
+            spawnSeed();
+            spawnBomb();
+        });
+    
+        // Funkce pro sledování pohybu myši s plynulým pohybem
+        gameOverlay.addEventListener('mousemove', (event) => {
+            const x = event.clientX - 25;
+            const y = event.clientY - 25;
+            hamster.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    
+        // Funkce pro vytváření semínek
+        function spawnSeed() {
+            const seed = document.createElement('div');
+            seed.classList.add('seed');
+            seed.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
+            seed.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
+            gameOverlay.appendChild(seed);
+    
+            // Kontrola, zda křeček sbírá semínko
+            seed.addEventListener('mouseenter', () => {
+                seed.remove();
+                seedCount++;
+                document.getElementById('seed-count').textContent = seedCount;
+    
+                // Změna ikony křečka na krátkou dobu
+                hamster.style.background = "url('./hamster2.png') no-repeat center/contain";
+                setTimeout(() => {
+                    hamster.style.background = "url('./hamster.png') no-repeat center/contain";
+                }, 300); // Po 300ms vrátí původní ikonu
+    
+                spawnSeed(); // Přidání nového semínka
+            });
+        }
+    
+        // Funkce pro vytváření bomb
+        function spawnBomb() {
+            const bomb = document.createElement('div');
+            bomb.classList.add('bomb');
+            bomb.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
+            bomb.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
+            gameOverlay.appendChild(bomb);
+    
+            // Bomb zmizí po 3 sekundách
+            setTimeout(() => {
+                bomb.remove();
+                spawnBomb(); // Vytvoří novou bombu
+            }, 3000);
+    
+            // Kontrola, zda křeček chytí bombu
+            bomb.addEventListener('mouseenter', () => {
+                bomb.remove();
+                seedCount = Math.max(seedCount - 1, 0); // Odebírá semínka, ale ne méně než 0
+                document.getElementById('seed-count').textContent = seedCount;
+
+                hamster.style.background = "url('./bomb2.png') no-repeat center/contain";
+                setTimeout(() => {
+                    hamster.style.background = "url('./hamster.png') no-repeat center/contain";
+                }, 300);
+
+                spawnBomb(); // Přidání nové bomby 
+            });
+        }
+    
+        // Ukončení hry při kliknutí mimo hru
+        gameOverlay.addEventListener('click', (event) => {
+            if (event.target.id === 'game-overlay') {
+                gameOverlay.style.display = 'none';
+                gameOverlay.querySelectorAll('.seed, .bomb').forEach(item => item.remove()); // Odstranění všech prvků
+            }
+        });
+    </script>    
+</body>
+</html>

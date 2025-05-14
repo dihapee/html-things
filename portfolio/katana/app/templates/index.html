@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katana - Nástroj pro síťové testování</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #00ffcc;
+            font-family: 'Share Tech Mono', monospace;
+            padding: 2rem;
+            margin: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        pre.logo {
+            color: #ff0066;
+            font-size: 12px;
+            line-height: 12px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        h1 {
+            color: #00ffcc;
+            font-size: 2rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        form {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+        input, button {
+            padding: 0.5rem;
+            margin-right: 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        input {
+            background: #333;
+            color: #00ffcc;
+        }
+        button {
+            background: #00ffcc;
+            color: #0d0d0d;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        button:hover {
+            transform: scale(1.1);
+        }
+        .result-box {
+            background: #111;
+            border-left: 4px solid #00ffcc;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+        }
+        a {
+            color: #ff0066;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <pre class="logo">{{ logo }}</pre>
+    <h1>Katana - Nástroj pro síťové testování</h1>
+
+    <form action="/info" method="get">
+        <button type="submit">Získat síťové informace</button>
+    </form>
+
+    <form action="/scan" method="post">
+        <label>IP rozsah k prohledání:
+            <input type="text" name="ip_range" placeholder="např. 192.168.1.0/24" required>
+        </label>
+        <button type="submit">Spustit ARP Scan</button>
+    </form>
+
+    <form action="/ping" method="post">
+        <label>Cíl pro ping:
+            <input type="text" name="ping_target" placeholder="např. google.com" required>
+        </label>
+        <button type="submit">Spustit Ping</button>
+    </form>
+
+    {% if scan_results %}
+        <div class="result-box">
+            <h3>Výsledky ARP Scanu:</h3>
+            {% for device in scan_results %}
+                IP: {{ device.ip }} | MAC: {{ device.mac }}<br>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if ping_result %}
+        <div class="result-box">
+            <h3>Výsledek Ping:</h3>
+            <pre>{{ ping_result }}</pre>
+        </div>
+    {% endif %}
+</div>
+
+<!-- GSAP animace -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+    gsap.from(".logo", {opacity: 0, y: -50, duration: 1.5, ease: "power3.out"});
+    gsap.from("h1", {opacity: 0, y: 30, delay: 1, duration: 1});
+    gsap.from("form", {
+        opacity: 0,
+        y: 20,
+        duration: 1,
+        stagger: 0.3,
+        delay: 1.2
+    });
+</script>
+</body>
+</html>

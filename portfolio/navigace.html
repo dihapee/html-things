@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Moje Projekty</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+      margin: 0;
+      padding: 40px 20px;
+      color: #2c3e50;
+    }
+
+    section {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .projekt {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 15px;
+      padding: 40px 30px 40px 140px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(50px) scale(0.9) rotate(-2deg);
+    }
+
+    .projekt:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .projekt img {
+      position: absolute;
+      left: -40px;
+      width: 160px;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid white;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      opacity: 0;
+      transform: scale(0.8) rotate(-15deg);
+    }
+
+    .projekt-content {
+      flex: 1;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: #1a1a1a;
+    }
+
+    p {
+      margin: 0 0 15px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    a {
+      display: inline-block;
+      padding: 8px 18px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<section>
+  <div id="projekt1" class="projekt">
+    <img src="wooow/donttouch.png" alt="Náhled projektu 1">
+    <div class="projekt-content">
+      <h1>Dont Touch the Button</h1>
+      <p>Minihra, kde se tlačítko snaží unikat kurzoru. Po každém chycení se chování mění.</p>
+      <a href="wooow/index.html">Zobrazit projekt</a>
+    </div>
+  </div>
+
+  <div id="projekt2" class="projekt">
+    <img src="javashi/lock.png" alt="Náhled projektu 2">
+    <div class="projekt-content">
+      <h1>Java PasswordSaver</h1>
+      <p>Java aplikace s cmd ovládáním, ukládání hesel do txt souboru.</p>
+      <a href="javashi/javashi.java">Zobrazit projekt</a>
+    </div>
+  </div>
+
+  <div id="projekt3" class="projekt">
+    <img src="krecek/hamster2.png" alt="Náhled projektu 3">
+    <div class="projekt-content">
+      <h1>Minihra: Hladový křeček</h1>
+      <p>Interaktivní webová hra, kde hráč sbírá semínka s křečkem, který sleduje myš.</p>
+      <a href="krecek/index.html">Zobrazit projekt</a>
+    </div>
+  </div>
+
+  <div id="projekt4" class="projekt">
+    <img src="katana/katana.jpg" alt="Náhled projektu 4">
+    <div class="projekt-content">
+      <h1>Katana: Síťová analýza</h1>
+      <p>Nástroj který provádí základní síťovou analýzu a testy.</p>
+      <a href="katana/katana.py">Zobrazit projekt</a>
+    </div>
+  </div>
+
+  <div id="projekt5" class="projekt">
+    <img src="images/login.png" alt="Náhled projektu 5">
+    <div class="projekt-content">
+      <h1>Login systém v JavaFX</h1>
+      <p>Java aplikace s grafickým přihlašováním, kontrolou vstupů a přepínáním scén.</p>
+      <a href="projekty/projekt5/">Zobrazit projekt</a>
+    </div>
+  </div>
+</section>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+  gsap.utils.toArray(".projekt").forEach((el, i) => {
+    const img = el.querySelector("img");
+    gsap.to(el, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      rotate: 0,
+      duration: 1.2,
+      delay: i * 0.3,
+      ease: "power3.out"
+    });
+    gsap.to(img, {
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      duration: 1.4,
+      delay: i * 0.3 + 0.2,
+      ease: "elastic.out(1, 0.6)"
+    });
+  });
+</script>
+
+</body>
+</html>
